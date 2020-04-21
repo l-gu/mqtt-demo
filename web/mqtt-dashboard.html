@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Dashboard</title>
+<script type="text/javascript" src="libs/gauge.min.js"></script>
+<script type="text/javascript" src="libs/paho-mqtt-103-min.js"></script>
+
+</head>
+
+<body>
+<h1>MQTT dashboard</h1>
+<a href="index.html" >Back to index.html</a>
+<br><br>
+<table>
+<tr>
+<td align="center">Temperature</td>
+<td align="center">Humidity</td>
+<td align="center">Door</td>
+</tr>
+<tr>
+<td><canvas id="gauge1" width="200" height="100" style="border:1px solid #000000;" ></canvas></td>
+<td><canvas id="gauge2" width="200" height="100" style="border:1px solid #000000;" ></canvas></td>
+<td align="center" style="height: 160px"><img id="door-img" alt="door state" src="./img/blank.png" style="width: 50%; height: 50%" ></td>
+</tr>
+<tr>
+<td align="center"> <input style="text-align: center;" id="val1" value="???"/> </td>
+<td align="center"> <input style="text-align: center;" id="val2" value="???"/> </td>
+<td align="center"> <input style="text-align: center;" id="doorState" value="???"/> </td>
+</tr>
+<tr>
+<td align="center"> </td>
+<td align="center"> </td>
+<td align="center"> 
+<input type="button" value="Open"  onclick="console.log('doorOpen()' ); doorOpen();">
+<input type="button" value="Close" onclick="console.log('doorClose()' ); doorClose();">
+</td>
+</tr>
+
+</table>
+</body>
+<script type="text/javascript" src="mqtt-dashboard-gauge1.js"></script>
+<script type="text/javascript" src="mqtt-dashboard-gauge2.js"></script>
+<script type="text/javascript" src="mqtt-dashboard-pubsub.js"></script>
+<script type="text/javascript" src="mqtt-door.js"></script>
+</html>

@@ -1,0 +1,14 @@
+
+
+1) Install PAHO Python 
+
+  cf https://pypi.org/project/paho-mqtt/ 
+  
+  pip install paho-mqtt
+
+  
+2) Use PAHO in Python files 
+
+  import paho.mqtt.client as mqtt
+  
+  

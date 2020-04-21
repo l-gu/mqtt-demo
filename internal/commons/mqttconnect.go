@@ -1,0 +1,42 @@
+package commons
+
+import (
+	"fmt"
+	"log"
+	"time"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+)
+
+// const brokerURI  string = "tcp://test.mosquitto.org:1883"  // Network error : %!s(<nil>)
+// const brokerURI  string = "tcp://iot.eclipse.org:1883" // Cannot connect (April 2020)
+// const brokerURI string = "tcp://broker.hivemq.com:1883" // OK
+
+func createClientOptions(brokerURI string, clientId string) *mqtt.ClientOptions {
+	opts := mqtt.NewClientOptions()
+
+	// AddBroker adds a broker URI to the list of brokers to be used.
+	// The format should be  "scheme://host:port"
+	opts.AddBroker(brokerURI)
+
+	//	opts.SetUsername(user)
+	//	opts.SetPassword(password)
+	opts.SetClientID(clientId)
+	return opts
+}
+
+func Connect(clientId string) mqtt.Client {
+	InitConfig("config.json")
+	brokerURI := GetBrokerURI()
+	fmt.Println("Trying to connect (" + brokerURI + ", " + clientId + ")...")
+	opts := createClientOptions(brokerURI, clientId)
+	client := mqtt.NewClient(opts)
+	token := client.Connect()
+	for !token.WaitTimeout(3 * time.Second) {
+	}
+	if err := token.Error(); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Connected.")
+	return client
+}

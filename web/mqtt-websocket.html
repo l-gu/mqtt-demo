@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+
+<!-- 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.js"></script>
+ -->
+<script type="text/javascript" src="./libs/paho-mqtt-103-min.js"></script>
+<script type="text/javascript">
+
+//
+var host = 'test.mosquitto.org';
+var port = 8080;
+//var path = '/mqtt';
+var path = '';
+var clientId = 'browser-client' + parseInt( Math.random() * 100, 10);
+
+var topicSUB = 'devfest/bdm/#';
+var topicPUB = 'devfest/bdm/js';
+var useTLS = false;
+
+//Create a client instance
+client = new Paho.MQTT.Client(host, port, path, clientId);
+console.log("MQTT client created");
+
+// set callback handlers
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+// connect the client
+console.log("MQTT client.connect()");
+client.connect({onSuccess:onConnect});
+
+
+// called when the client connects
+function onConnect() {
+	// Once a connection has been made, make a subscription and send a message.
+    setStatus("Connected (event 'onConnect')" )
+	
+	//client.subscribe("World");
+	client.subscribe(topicSUB, {qos: 0});
+
+/*	
+	message = new Paho.MQTT.Message("JS client connected");
+	//message.destinationName = "World";
+	message.destinationName = topicPUB ;
+	client.send(message);
+*/
+}
+
+// called when the client loses its connection
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    //log("onConnectionLost:"+responseObject.errorMessage);
+    setStatus("onConnectionLost:"+responseObject.errorMessage)
+  }
+}
+
+// called when a message arrives
+function onMessageArrived(message) {
+  //log("onMessageArrived:"+ "["+message.destinationName+"] " + message.payloadString);
+  log( "["+message.destinationName+"] : " + message.payloadString);
+}
+
+function log(txt) {
+	console.log(txt);
+    var textArea = document.getElementById("log")
+    if ( textArea ) {
+    	logTxt = txt + "\n" ;
+    	textArea.value += logTxt ;	
+    	textArea.scrollTop = textArea.scrollHeight;
+    }
+}
+function publish() {
+	var topic = document.getElementById("topic").value ;
+	var payload = document.getElementById("message").value ;
+
+	message = new Paho.MQTT.Message(payload);
+	message.destinationName = topic;	  
+	client.send(message);
+}
+function setStatus(txt) {
+	document.getElementById("status").value = txt ;
+}
+/*
+ * Message structure : 
+ * topic   : message.destinationName
+ * payload : message.payloadString
+ * 
+ */
+</script>
+</head>
+
+<body>
+<h1>MQTT WebSocket test</h1>
+<a href="index.html" >Back to index.html</a>
+<br><br>
+Status : <input id="status" type="text" style="width: 300px" value="" />
+<br>
+SUB topic : <input id="subTopic" type="text" style="width: 300px" value="" />
+
+<table border="1">
+<tr style="font-size: x-large; font-weight: bold; ">
+<td>Subscribe (event 'onMessageArrived')</td>
+<td>Publish</td></tr>
+<tr>
+
+<td>
+<textarea id="log" rows="20" cols="60" spellcheck="false">
+</textarea>
+</td>
+
+
+<td>
+Message : <input id="message" type="text" value="Hello JS"/>
+<br><br>
+Topic : &nbsp; &nbsp; <input id="topic" type="text" value="" />
+<br><br>
+<button onclick="publish();">Publish</button>
+</td>
+</tr>
+</table>
+
+</body>
+
+<script>
+document.getElementById("topic").value = topicPUB ;
+document.getElementById("subTopic").value = topicSUB ;
+</script>
+
+</html>
