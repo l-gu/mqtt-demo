@@ -1,5 +1,5 @@
 @echo off
-rem BUILD WEB APPLICATION 
+rem BUILD ALL "cmd" executables
 rem (the resulting executables are in the current folder)
 @echo on
 go clean -cache ./...
