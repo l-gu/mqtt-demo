@@ -1,0 +1,1 @@
+mosquitto_pub -h localhost -t a/b/c -m "HELLO WORLD"
